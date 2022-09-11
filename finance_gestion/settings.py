@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'finance.apps.FinanceConfig'
 ]
 
 MIDDLEWARE = [
@@ -76,7 +77,7 @@ WSGI_APPLICATION = 'finance_gestion.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "finance_gestion",
+        'NAME': "finance_management",
         'USER': 'postgres', 
         'PASSWORD': 'jorgea25',
         'HOST': '127.0.0.1',
