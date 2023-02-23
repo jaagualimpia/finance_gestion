@@ -1,9 +1,24 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
     <head>
-
+        <link rel="stylesheet" href="{% static 'finance\css\login.css' %}">
     </head>
     <body>
-        <h1>This is login</h1>
+        <form class="loginContainer" method="">
+            <div class="inputContainer">
+                <label for="">Nombre de usuario</label>
+                <input type="text" id="usernameField" autocomplete="off">
+                <span class="textLine"></span>
+            </div>
+            <div class="inputContainer">
+                <label for="">Contraseña</label>
+                <input type="password" id="passwordField" autocomplete="off">
+                <span class="textLine"></span>
+            </div>
+            <button id="loginButton" type="submit">Iniciar Sesión</button>
+            <a id="registerLink" href="{% url 'finance:register' %}">Crear una cuenta</a>
+        </form> 
     </body>
 </html>

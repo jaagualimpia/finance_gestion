@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 
+app_name = 'finance'
+
 urlpatterns = [
     path('home', views.home, name='index'),
     path('login', views.login, name='login'),
