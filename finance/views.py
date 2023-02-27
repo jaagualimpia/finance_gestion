@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-
+from .forms import LogInForm
 # Create your views here.
 
 def home(request):
@@ -10,6 +10,13 @@ def register(request):
     return render(request, 'finance/html/register.html') 
 
 def login(request):
+    if request.method == 'GET':
+        form = LogInForm(request.GET)
+
+        if form.is_valid():
+            return redirect('/finance/home')
+
+
     return render(request, 'finance/html/login.html') 
 
 def transaction(request):
