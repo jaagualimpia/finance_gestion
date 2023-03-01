@@ -23,8 +23,9 @@
                   <div class="col">
                     <p class="fs-3 text-center fw-bold">Log in</p>
 
-                    {% csrf_token %}
+                    
                     <form method="GET" action="">
+                      {% csrf_token %}
                       <div class="input-group input-group-sm mb-3">
                         <div class="input-group-prepend">
                           <span
@@ -60,7 +61,7 @@
                       </div>
 
                       <div class="text-center">
-                        <button disabled class="btn btn-primary px-5 fw-bold">
+                        <button class="btn btn-primary px-5 fw-bold">
                           Sign Up
                         </button>
                       </div>

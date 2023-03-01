@@ -7,8 +7,9 @@ urlpatterns = [
     path('home', views.home, name='index'),
     path('login', views.login, name='login'),
     path('register', views.register, name='register'),
-    path('trasaction', views.transaction, name='transaction'),
+    path('transaction', views.transaction, name='transaction'),
     path('history', views.history, name='history'),
     path('history_detail', views.history_detail, name='history'),
-    path('graphs', views.graphs, name='graphs')
+    path('graphs', views.graphs, name='graphs'),
+    path('pockets', views.pockets, name='pockets')
 ]
