@@ -19,6 +19,10 @@ def register(request):
             password = form.cleaned_data.get('password')
 
             User(username=username, password=password).save()
+            user = User.objects.getc(username=username, password=password)
+
+            request['username'] = user.username 
+            request['password'] = user.password
 
             return redirect('/finance/home')
 
@@ -36,7 +40,7 @@ def login(request):
             try:
                 usuario = User.objects.get(username = username, password = password)
                 request.session['username'] = usuario.username
-                request.session['password'] = usuario.password
+                request.session['password'] = usuario.password 
 
                 return redirect('/finance/home')
             

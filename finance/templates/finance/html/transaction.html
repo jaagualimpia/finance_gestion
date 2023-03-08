@@ -1,6 +1,6 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -20,31 +20,50 @@
 
                         <form action="">
                             <form>
-                                <div class="form-row">
-
+                                <div class="form-row mb-3">
                                     <label for="inputAmount">Amount</label>
                                     <input type="number" class="form-control" id="inputAmount" placeholder="number"
                                         min="0">
                                 </div>
 
-                                <div class="form-row">
+                                <div class="form-row mb-3">
                                     <label for="inputDescription">Description</label>
                                     <input type="text" class="form-control" id="inputDescription"
                                         placeholder="Description">
                                 </div>
 
-                                <div class="form-row">
+                                <div class="form-row mb-3">
                                     <label for="inputDate">Date</label>
                                     <input type="date" class="form-control" id="inputDescription"
                                         placeholder="Description">
                                 </div>
 
-                                <div class="form-row">
+                                <div class="form-row mb-3">
                                     <div class="input-group mb-3">
                                         <label for="inputType">Transaction type</label>
                                         <select name="inputType" class="custom-select w-100 py-1" id="inputGroupSelect01">
                                             <option value="true">Ingreso</option>
                                             <option value="false">Egreso</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row mb-3">
+                                    <div class="input-group mb-3">
+                                        <label for="inputType">It is a pocket transaction?</label>
+                                        <select onchange="isPocketValidation()" name="inputType" class="custom-select w-100 py-1" id="selectIsPocket">
+                                            <option value=''>No</option>
+                                            <option value='true'>Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row mb-3">
+                                    <div class="input-group mb-3">
+                                        <label for="inputType">Pockets:</label>
+                                        <select disabled name="inputType" class="custom-select w-100 py-1" id="selectSpecificPocket">
+                                            <option value="true">Yes</option>
+                                            <option value="false">No</option>
                                         </select>
                                     </div>
                                 </div>
@@ -61,6 +80,8 @@
         </div>
 
     </div>
+
+    <script src="{% static 'finance/javascript/transactionBehavior.js' %}"></script>
 </body>
 
 </html>

@@ -13,12 +13,9 @@ class Transaction(models.Model):
     date = models.DateField()
     user_id = models.ForeignKey(User, on_delete = models.CASCADE)
     transaction_type = models.BooleanField()
+    isPocketTransaction = models.BooleanField()
 
 class Pocket(models.Model):
     id = models.BigAutoField(primary_key = True)
     pocket_name = models.CharField(max_length = 50)
     user_id = models.ForeignKey(User, on_delete = models.CASCADE)
-
-class PocketTransaction(models.Model):
-    pocket_id = models.ForeignKey(Pocket, on_delete=models.CASCADE)
-    transaction_id = models.ForeignKey(Transaction, on_delete=models.CASCADE) 
