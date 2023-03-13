@@ -19,3 +19,7 @@ class Pocket(models.Model):
     id = models.BigAutoField(primary_key = True)
     pocket_name = models.CharField(max_length = 50)
     user_id = models.ForeignKey(User, on_delete = models.CASCADE)
+
+class PocketTransaction(models.Model):
+    transaction = models.ForeignKey(Transaction, on_delete= models.CASCADE)
+    pocket_name = models.ForeignKey(Pocket, on_delete = models.CASCADE)

@@ -1,9 +1,79 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
-    <head>
 
-    </head>
-    <body>
-        <h1>History</h1>
-    </body>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <title>History</title>
+</head>
+
+<body class="bg-dark">
+    {% include './widgets/widgetHeader.html' %}
+
+    <div class="container pt-3">
+        <table class="table table-hover table-dark">
+            <thead>
+                <th>Amount</th>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Type</th>
+            </thead>
+
+            <tbody>
+                {% for transaction in transactions %}
+                <tr id="row-{{forloop.counter}} py-3" style="cursor: pointer" data-bs-toggle="modal" data-bs-target="#myModal" onclick="getData('{{forloop.counter}}')">
+
+                    <td id="amountId-{{forloop.counter}}">{{ transaction.amount }}</td>
+
+                    {% if transaction.transaction_type %}
+                        <td class="text-success fw-bold" id="descriptionId-{{forloop.counter}}">{{ transaction.description }}</td>
+                        {% else %}
+                        <td class="text-danger fw-bold" id="descriptionId-{{forloop.counter}}">{{ transaction.description }}</td>
+                    {% endif %}
+
+                    <td id="dateId-{{forloop.counter}}">{{ transaction.date }}</td>
+
+                    {% if transaction.transaction_type %}
+                        <td class="text-success" id="typeId-{{forloop.counter}}"> Ingreso </td>
+                        {% else %}
+                        <td class="text-danger" id="typeId-{{forloop.counter}}"> Egreso </td>
+                    {% endif %}
+
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+  
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+          <h3 id="amountModal"></h3>
+          <p id="descriptionModal"></p>
+          <p id="dateModal"></p>
+          <p id="typeModal"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+
+  <script src="{% static 'finance/javascript/historyBehavior.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+</body>
+
 </html>
