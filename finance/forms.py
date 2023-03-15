@@ -13,4 +13,4 @@ class TransactionForm(forms.Form):
     amount =  forms.FloatField(label = 'amount')
     description =  forms.CharField(label = 'description')
     date =  forms.DateField(label = 'date')
-    transaction_type =  forms.BooleanField(label = 'transaction_type')
+    transaction_type = forms.CharField(label= 'transaction_type')

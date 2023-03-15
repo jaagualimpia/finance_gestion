@@ -1,6 +1,6 @@
 from types import NoneType
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpResponseBadRequest, QueryDict
 from django.views.decorators.csrf import csrf_exempt
 from .forms import LogInForm, RegisterForm, TransactionForm
 from .models import *
@@ -81,13 +81,9 @@ def transaction(request):
         form = TransactionForm(request.POST)
 
         if form.is_valid():
-            makeTransaction(form, request)
+            make_transaction(form, request)
         else:
-            print(request.POST)
-            print(request)
-            for error_field in form.errors:
-                print(f"field: {error_field}")
-                print(f"error: {form.errors[error_field]}" )
+            print_errors(form, request)
             
 
     return render(request, 'finance/html/transaction.html')
@@ -107,13 +103,16 @@ def pockets(request):
     return render(request, 'finance/html/pockets.html')
 
 
-def makeTransaction(form, request):
+def make_transaction(form, request):
     Transaction(description = form.cleaned_data.get('description'),
                 amount = form.cleaned_data.get('amount'), 
                 date = form.cleaned_data.get('date'), 
                 user_id = User.objects.get(username = request.session['username']), 
-                transaction_type = form.cleaned_data.get('transaction_type'),
+                transaction_type = True if type(form.cleaned_data.get('transaction_type')) == "ingreso" else False,
                 isPocketTransaction = False).save()
 
-
-
+def print_errors(form, request):
+    print(request.POST)
+    for error_field in form.errors:
+                    print(f"field: {error_field}")
+                    print(f"error: {form.errors[error_field]}" )
