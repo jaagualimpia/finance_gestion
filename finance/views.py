@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import LogInForm, RegisterForm, TransactionForm
 from .models import *
 from django.db.models import Sum
+from datetime import datetime
 
 # Create your views here.
 
@@ -12,19 +13,11 @@ def home(request):
     context = {}
     user = User.objects.get(username = request.session['username'])
 
-    positive_transactions = Transaction.objects.filter(user_id = 'Jorge Agualimpia', transaction_type = True).aggregate(Sum('amount'))['amount__sum']
-    negative_transactions = Transaction.objects.filter(user_id = 'Jorge Agualimpia', transaction_type = False).aggregate(Sum('amount'))['amount__sum']
-    
-    if positive_transactions == None:
-        positive_transactions = 0    
-
-    if negative_transactions == None:
-        negative_transactions = 0
-
-    context['balance'] = "{:,}".format(positive_transactions - negative_transactions)
+    balance = calculate_balance(request)
+    context['balance'] = "{:,}".format(balance)
     context['user'] = user.username
     
-    if (positive_transactions - negative_transactions) < 0:
+    if (balance) < 0:
         context['positive'] = False
     else:
         context['positive'] = True
@@ -41,10 +34,9 @@ def register(request):
             password = form.cleaned_data.get('password')
 
             User(username=username, password=password).save()
-            user = User.objects.getc(username=username, password=password)
+            user = User.objects.get(username=username, password=password)
 
             request.session['username'] = user.username 
-            request.session['password'] = user.password
 
             return redirect('/finance/home')
 
@@ -62,7 +54,6 @@ def login(request):
             try:
                 usuario = User.objects.get(username = username, password = password)
                 request.session['username'] = usuario.username
-                request.session['password'] = usuario.password 
 
                 return redirect('/finance/home')
             
@@ -73,9 +64,6 @@ def login(request):
 
 @csrf_exempt
 def transaction(request):
-    context = {}
-
-    context['pockets'] = Pocket.objects.filter(user_id = request.session['username'])
 
     if request.method == 'POST':
         form = TransactionForm(request.POST)
@@ -85,16 +73,26 @@ def transaction(request):
         else:
             print_errors(form, request)
             
-
     return render(request, 'finance/html/transaction.html')
 
 def history(request):    
-    transactions = Transaction.objects.filter(user_id = "Jorge Agualimpia").order_by('-date')
+    transactions = Transaction.objects.filter(user_id = request.session['username']).order_by('-date')
 
     return render(request, 'finance/html/history.html', {"transactions": transactions})
 
 def graphs(request):
-    return render(request, 'finance/html/graphs.html')
+    context = { "date": [], "balance": []}
+
+    data_dict = BalanceStatistics.objects.filter(user = User(username = request.session['username'])).values_list('date', 'balance')
+
+    for element in data_dict:
+        context['date'].append( element[0])
+        context['balance'].append(element[1])
+
+
+    print(context)
+
+    return render(request, 'finance/html/graphs.html', context = context)
 
 def history_detail(request):
     return render(request, 'finance/html/history.html')
@@ -104,15 +102,35 @@ def pockets(request):
 
 
 def make_transaction(form, request):
+    date = datetime.now()
+    form_date = form.cleaned_data.get('date')
+    trigger = str(form_date) == f"{date.year}-{'0' if date.month < 10 else ''}{date.month}-{date.day}"
+
     Transaction(description = form.cleaned_data.get('description'),
                 amount = form.cleaned_data.get('amount'), 
                 date = form.cleaned_data.get('date'), 
                 user_id = User.objects.get(username = request.session['username']), 
-                transaction_type = True if type(form.cleaned_data.get('transaction_type')) == "ingreso" else False,
+                transaction_type = True if form.cleaned_data.get('transaction_type') == "ingreso" else False,
                 isPocketTransaction = False).save()
+    
+    BalanceStatistics(user = User.objects.get(username = request.session['username']),
+                       balance = calculate_balance(request),
+                       date = date if trigger else form.cleaned_data.get('date')).save()
 
 def print_errors(form, request):
     print(request.POST)
     for error_field in form.errors:
                     print(f"field: {error_field}")
                     print(f"error: {form.errors[error_field]}" )
+
+def calculate_balance(request):
+    positive_transactions = Transaction.objects.filter(user_id = request.session['username'], transaction_type = True).aggregate(Sum('amount'))['amount__sum']
+    negative_transactions = Transaction.objects.filter(user_id = request.session['username'], transaction_type = False).aggregate(Sum('amount'))['amount__sum']
+    
+    if positive_transactions == None:
+        positive_transactions = 0    
+
+    if negative_transactions == None:
+        negative_transactions = 0
+
+    return positive_transactions - negative_transactions

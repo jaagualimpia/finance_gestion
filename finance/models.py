@@ -24,4 +24,9 @@ class Pocket(models.Model):
 class PocketTransaction(models.Model):
     transaction = models.ForeignKey(Transaction, on_delete= models.CASCADE)
     pocket_name = models.ForeignKey(Pocket, on_delete = models.CASCADE)
+
+class BalanceStatistics(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    balance = models.FloatField()
+    date = models.DateTimeField(auto_now_add=True)
     
