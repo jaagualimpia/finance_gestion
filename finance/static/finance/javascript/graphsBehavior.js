@@ -22,7 +22,7 @@ new Chart(ctx, {
     responsive: true,
     scales: {
       y: {
-        beginAtZero: true
+        
       }
     }
     

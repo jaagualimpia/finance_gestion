@@ -1,11 +1,13 @@
-from types import NoneType
+import pandas as pd
+import numpy as np
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404, HttpResponseRedirect, HttpResponseBadRequest, QueryDict
+from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from .forms import LogInForm, RegisterForm, TransactionForm
 from .models import *
 from django.db.models import Sum
 from datetime import datetime
+from sklearn.linear_model import LinearRegression
 
 # Create your views here.
 
@@ -89,9 +91,14 @@ def graphs(request):
         context['date'].append( element[0])
         context['balance'].append(element[1])
 
+    df_context = pd.DataFrame(context)
+    df_context['date'].apply(func = pd.to_datetime)
+    df_context['date'] = df_context['date'].apply(oordinal_modified_transform)
 
-    print(context)
-
+    model = LinearRegression().fit(X = np.array(df_context['date']).reshape(-1, 1), y = df_context['balance'])
+    ordinal_date = datetime.toordinal(datetime.strptime('2023/04/20', "%Y/%m/%d"))
+    prediction = model.predict([[ordinal_date]])
+    print(prediction[0])
     return render(request, 'finance/html/graphs.html', context = context)
 
 def history_detail(request):
@@ -134,3 +141,6 @@ def calculate_balance(request):
         negative_transactions = 0
 
     return positive_transactions - negative_transactions
+
+def oordinal_modified_transform(date: datetime):
+    return datetime.toordinal(date) + (date.hour/24)+ (date.minute/1440) + (date.second/86400)
