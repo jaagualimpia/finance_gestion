@@ -28,28 +28,3 @@ new Chart(ctx, {
     
   }
 });
-
-const ctx2 = document.getElementById('myChart2');
-new Chart(ctx2, {
-    type: 'bar',
-    data: {
-      labels: date,
-      datasets: [{
-        label: 'Balance',
-        data: balance,
-        fill: true,
-        borderColor: 'rgb(75, 252, 252)',
-        borderWidth: 1
-      }]
-    },
-  
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-      
-    }
-  });

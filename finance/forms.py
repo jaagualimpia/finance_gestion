@@ -14,3 +14,6 @@ class TransactionForm(forms.Form):
     description =  forms.CharField(label = 'description')
     date =  forms.DateField(label = 'date')
     transaction_type = forms.CharField(label= 'transaction_type')
+
+class PredictionForm(forms.Form):
+    date = forms.DateField(label = 'date')
