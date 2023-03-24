@@ -84,6 +84,12 @@ def graphs(request):
         context['balance'].append(element[1])
 
     balance_predictor = LinearRegressionBalanceStatistics(context)
+    tendency = balance_predictor.get_prediction_tendency()
+
+    context['tendency'] = []
+
+    for element in tendency:
+         context['tendency'].append(element)
 
     if request.method == 'POST':
         form = PredictionForm(request.POST)
